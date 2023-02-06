@@ -17,13 +17,24 @@ func main() {
 
 	input := flag.String("i", "", "Input CSV filename; default STDIN")
 	output := flag.String("o", "", "Output CSV filename; default STDOUT")
+	book := flag.String("b", "", "Name of book for input file")
+	chapter := flag.String("c", "", "Chapter number to use in output file")
 	flag.Parse()
 
 	if *output == "" {
 		usage("No output file provided!")
 	}
+
 	if *input == "" {
 		usage("No input file provided!")
+	}
+
+	if *book == "" {
+		usage("Name of book for input file is missing!")
+	}
+
+	if *chapter == "" {
+		usage("Chapter number to use for input file is missing!")
 	}
 
 	// input file
@@ -46,7 +57,7 @@ func main() {
 	var rows [][]string
 
 	for verseKey, verseVal := range m {
-		log.Printf("\nWorking on verse: %v", verseKey)
+		// log.Printf("\nWorking on verse: %v", verseKey)
 		_verseVal := verseVal.(map[string]any)
 		for _, assignmentsVal := range _verseVal {
 			__v := assignmentsVal.([]any)
@@ -63,8 +74,8 @@ func main() {
 						wordSequence := 0
 						for _, topVal := range _top {
 							row := make([]string, 12)
-							row[0] = "Titus"       // book
-							row[1] = "1"           // chapter
+							row[0] = *book         // book
+							row[1] = *chapter      // chapter
 							row[2] = "" + verseKey // verse
 							row[3] = fmt.Sprintf("%v", alignmentSequence)
 
@@ -91,8 +102,8 @@ func main() {
 						wordSequence := 0
 						for _, botVal := range _bot {
 							row := make([]string, 12)
-							row[0] = "Titus"       // book
-							row[1] = "1"           // chapter
+							row[0] = *book         // book
+							row[1] = *chapter      // chapter
 							row[2] = "" + verseKey // verse
 							row[3] = fmt.Sprintf("%v", alignmentSequence)
 							row[4] = "B"
