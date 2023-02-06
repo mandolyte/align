@@ -32,22 +32,35 @@ func main() {
 	data, err := ioutil.ReadAll(fi)
 
 	// var results []alignment
-	var results interface{}
+	var results any
 	err = json.Unmarshal([]byte(data), &results)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	m := results.(map[string]interface{})
+	m := results.(map[string]any)
 	for verseKey, verseVal := range m {
 		log.Printf("\nWorking on verse: %v", verseKey)
-		_verseVal := verseVal.(map[string]interface{})
+		_verseVal := verseVal.(map[string]any)
 		for _, assignmentsVal := range _verseVal {
-			__v := assignmentsVal.([]interface{})
+			__v := assignmentsVal.([]any)
 			for _, wordsVal := range __v {
 				// log.Printf("wordsKey,wordsVal=%v,%v", wordsKey, wordsVal)
 				_alignedWordsKey := wordsVal.(map[string]any)
-				for wordKey, wordVal := range _alignedWordsKey {
-					log.Printf("wordkey,wordval: %v, %v", wordKey, wordVal)
+				for wordsKey, wordsVal := range _alignedWordsKey {
+					// log.Printf("wordkey,wordval: %v, %v", wordKey, wordVal)
+					if wordsKey == "topWords" {
+						log.Printf("process topWords\n")
+						_top := wordsVal.([]any)
+						for topKey, topVal := range _top {
+							log.Printf("....tw: key, val=%v,%v", topKey, topVal)
+						}
+					} else if wordsKey == "bottomWords" {
+						log.Printf("process bottomWords\n")
+						_bot := wordsVal.([]any)
+						for botKey, botVal := range _bot {
+							log.Printf("...bw: key, val=%v,%v", botKey, botVal)
+						}
+					}
 				}
 			}
 		}
